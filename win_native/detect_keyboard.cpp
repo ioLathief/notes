@@ -2,13 +2,13 @@
 #include <iostream>
 
 //Example
-HHOOK          mouse_hook;
+HHOOK          kb_hook;
 
 PKBDLLHOOKSTRUCT p;
 
 DWORD virtualKey;
 
-LRESULT CALLBACK mouse_proc(int nCode, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK kb_proc(int nCode, WPARAM wParam, LPARAM lParam) {
 
     if (nCode == HC_ACTION) {
         p = (PKBDLLHOOKSTRUCT)lParam;
@@ -30,16 +30,16 @@ LRESULT CALLBACK mouse_proc(int nCode, WPARAM wParam, LPARAM lParam) {
     }
 
 
-    return CallNextHookEx(mouse_hook, nCode, wParam, lParam);
+    return CallNextHookEx(kb_hook, nCode, wParam, lParam);
 }
 
 void main() {
-    mouse_hook = SetWindowsHookEx(WH_KEYBOARD_LL, mouse_proc, 0, 0);
+    kb_hook = SetWindowsHookEx(WH_KEYBOARD_LL, kb_proc, 0, 0);
 
     MSG msg{};
     while (GetMessage(&msg, 0, 0, 0) != 0) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-    UnhookWindowsHookEx(mouse_hook);
+    UnhookWindowsHookEx(kb_hook);
 }
